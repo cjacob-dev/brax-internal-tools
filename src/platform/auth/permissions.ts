@@ -16,10 +16,12 @@ export type Role = (typeof ROLES)[number];
 /**
  * The one central role -> permission map. Anything not listed is denied.
  * Admin deliberately has no kyc:* grants (separation of duties).
+ * compliance_reviewer also holds kyc:recommend, so four-eyes (decider != recommender)
+ * is enforced by the KYC server actions, not by roles alone.
  */
 export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
   ops_analyst: ["kyc:read", "kyc:recommend"],
-  compliance_reviewer: ["kyc:read", "kyc:decide", "kyc:reveal_pii"],
+  compliance_reviewer: ["kyc:read", "kyc:recommend", "kyc:decide", "kyc:reveal_pii"],
   admin: ["audit:read", "audit:export"],
 };
 

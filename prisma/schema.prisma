@@ -35,3 +35,39 @@ model AuditEvent {
   @@index([entityType, entityId])
   @@index([createdAt])
 }
+
+/// KYC Review Queue (src/apps/kyc). Enum-like columns are validated in src/apps/kyc/domain.ts.
+/// User references (claimedBy, recommendedBy, decidedBy) hold User ids.
+model KycCase {
+  id                   String   @id
+  customerName         String
+  /// individual | business
+  customerType         String
+  /// ISO 3166-1 alpha-2
+  country              String
+  /// 0-100
+  riskScore            Int
+  /// LOW | MEDIUM | HIGH
+  riskTier             String
+  /// PII. Never rendered raw: maskPII() in queries, revealTaxId() for audited reveal.
+  taxId                String
+  /// JSON array of { type, fileName, status }
+  documents            String
+  /// NEW | IN_REVIEW | PENDING_APPROVAL | APPROVED | REJECTED | ESCALATED
+  status               String   @default("NEW")
+  claimedBy            String?
+  recommendedBy        String?
+  /// APPROVE | REJECT
+  recommendation       String?
+  recommendationReason String?
+  escalationNote       String?
+  decidedBy            String?
+  decisionReason       String?
+  createdAt            DateTime @default(now())
+  slaDueAt             DateTime
+  updatedAt            DateTime @updatedAt
+
+  @@index([status])
+  @@index([riskTier])
+  @@index([slaDueAt])
+}
