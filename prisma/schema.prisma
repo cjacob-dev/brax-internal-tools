@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id
+  name      String
+  email     String   @unique
+  /// One of the roles in src/platform/auth/permissions.ts (SQLite has no enums).
+  role      String
+  createdAt DateTime @default(now())
+}
+
+/// Append-only. UPDATE and DELETE are blocked by DB triggers (see init migration)
+/// and by the Prisma client extension in src/platform/db.ts.
+model AuditEvent {
+  id         String   @id @default(cuid())
+  actorId    String?
+  actorRole  String?
+  app        String
+  action     String
+  entityType String
+  entityId   String?
+  before     String?
+  after      String?
+  reason     String?
+  createdAt  DateTime @default(now())
+
+  @@index([app])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}

@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+dialog::backdrop {
+  background: rgb(24 24 27 / 0.45);
+}
