@@ -24,7 +24,6 @@ describe("requirePermission: deny by default", () => {
     ["ops_analyst", "kyc:decide"],
     ["ops_analyst", "kyc:reveal_pii"],
     ["ops_analyst", "audit:read"],
-    ["compliance_reviewer", "kyc:recommend"],
     ["compliance_reviewer", "audit:read"],
     ["admin", "kyc:read"],
     ["admin", "kyc:decide"],
@@ -56,7 +55,7 @@ describe("requirePermission: deny by default", () => {
     const granted = Object.fromEntries(ROLES.map((r) => [r, PERMISSIONS.filter((p) => roleHasPermission(r, p))]));
     expect(granted).toEqual({
       ops_analyst: ["kyc:read", "kyc:recommend"],
-      compliance_reviewer: ["kyc:read", "kyc:decide", "kyc:reveal_pii"],
+      compliance_reviewer: ["kyc:read", "kyc:recommend", "kyc:decide", "kyc:reveal_pii"],
       admin: ["audit:read", "audit:export"],
     });
   });

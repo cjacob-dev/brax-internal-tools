@@ -2,6 +2,8 @@ export { Button } from "./Button";
 export { Card } from "./Card";
 export { ConfirmWithReasonDialog } from "./ConfirmWithReasonDialog";
 export { DataTable, type Column, type ColumnKind } from "./DataTable";
+export { DeadlineBadge } from "./DeadlineBadge";
+export { describeDeadline } from "./deadline";
 export { MaskedValue } from "./MaskedValue";
 export { PageHeader } from "./PageHeader";
 export { StatusBadge, type Tone } from "./StatusBadge";

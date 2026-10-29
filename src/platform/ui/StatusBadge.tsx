@@ -12,9 +12,13 @@ const TONES: Record<Tone, string> = {
 const DEFAULT_TONES: Record<string, Tone> = {
   APPROVED: "success",
   PENDING: "warning",
+  PENDING_APPROVAL: "warning",
   IN_REVIEW: "info",
   ESCALATED: "warning",
   REJECTED: "danger",
+  LOW: "success",
+  MEDIUM: "warning",
+  HIGH: "danger",
   ACCESS_DENIED: "danger",
   PII_REVEALED: "warning",
   AUDIT_EXPORTED: "info",

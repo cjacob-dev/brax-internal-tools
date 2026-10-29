@@ -1,10 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
+import { DeadlineBadge } from "./DeadlineBadge";
 import { StatusBadge } from "./StatusBadge";
 import { applyTableState, type Cell, type Row, type SortDir } from "./table-state";
 
-export type ColumnKind = "text" | "mono" | "status" | "datetime" | "json";
+export type ColumnKind = "text" | "mono" | "status" | "datetime" | "json" | "link" | "deadline";
 
 export type Column = {
   key: string;
@@ -13,11 +15,25 @@ export type Column = {
   sortable?: boolean;
   /** Included in the free-text filter. Defaults to true. */
   filterable?: boolean;
+  /** For kind "link": the row key holding the URL. */
+  hrefKey?: string;
 };
 
-function renderCell(value: Cell, kind: ColumnKind = "text") {
+function renderCell(value: Cell, column: Column, row: Row) {
   if (value === null || value === "") return <span className="text-zinc-400">-</span>;
-  switch (kind) {
+  switch (column.kind ?? "text") {
+    case "link": {
+      const href = column.hrefKey ? row[column.hrefKey] : null;
+      return typeof href === "string" ? (
+        <Link href={href} className="font-medium text-zinc-900 underline-offset-2 hover:underline">
+          {value}
+        </Link>
+      ) : (
+        value
+      );
+    }
+    case "deadline":
+      return <DeadlineBadge due={String(value)} />;
     case "status":
       return <StatusBadge status={String(value)} />;
     case "mono":
@@ -106,7 +122,7 @@ export function DataTable({
                 <tr key={row.id} className="border-b border-zinc-100 align-top last:border-0">
                   {columns.map((c) => (
                     <td key={c.key} className="px-3 py-2">
-                      {renderCell(row[c.key] ?? null, c.kind)}
+                      {renderCell(row[c.key] ?? null, c, row)}
                     </td>
                   ))}
                 </tr>
